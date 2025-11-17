@@ -1,0 +1,26 @@
+import java.util.ArrayList;
+
+public class MovieManager {
+
+    private ArrayList<Movie> inventory;
+
+    public MovieManager() {
+        inventory = new ArrayList<>();
+    }
+
+    public void addMovie(Movie movie) {
+        inventory.add(movie);
+        System.out.printf("%s was added to inventory.", movie.getTitle());
+    }
+
+    public void viewInventory() {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory.");
+        } else {
+            for (Movie movie: inventory ){
+                System.out.printf(String.valueOf(inventory));
+            }
+        }
+    }
+
+}
