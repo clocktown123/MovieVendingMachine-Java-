@@ -1,1 +1,75 @@
+public class Movie {
+    private  String movieTitle;
+    private  String mainActor;
+    private  String mainActress;
+    private String genre;
+    private int yearOfRelease;
+    private int stock;
+    private final double purchasePrice = 30.00;
+    private final double rentPrice = 21.00;
+
+    public Movie(String title,String genre ,int stock ){
+        this.movieTitle = title;
+        this.genre = genre;
+        this.stock = stock;
+
+    }
+
+    public Movie(int yearOfRelease, String mainActor, String mainActress){
+        this.mainActor = mainActor;
+        this.mainActress = mainActress;
+        this.yearOfRelease = yearOfRelease;
+
+    }
+
+    public String getTitle() {
+        return this.movieTitle;
+    }
+    public void setTitle(String title) {
+        this.movieTitle = title;
+    }
+
+    public String getActor() {
+        return this.mainActor;
+    }
+    public void setActor(String actor) {
+        this.mainActor = actor;
+    }
+
+    public String getActress() {
+        return this.mainActress;
+    }
+    public void setActress(String actress) {
+        this.mainActress = actress;
+    }
+
+    public String getGenre() {
+        return this.genre;
+    }
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public int getYear() {
+        return this.yearOfRelease;
+    }
+    public void setYear(int year) {
+        this.yearOfRelease = year;
+    }
+
+    public double getPurchasePrice() {
+        return this.purchasePrice;
+    }
+    public double getRentPrice() {
+        return this.rentPrice;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+}
 
