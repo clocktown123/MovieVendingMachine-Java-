@@ -1,0 +1,98 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class MovieVendingMachineDriver {
+
+    static ArrayList<Movie> inventory = new ArrayList<>();
+
+    public static void main(String[] args){
+
+        Scanner stdIn = new Scanner(System.in);
+        MovieManager manager = new MovieManager();
+
+        int quit = -1;
+
+        while(quit != 0){
+
+            //variables section
+            int choice;
+            int action = -1;
+
+            String name;
+
+            int passwordInput;
+            final int realPassword = 767391;
+
+            //movie variables
+            String title;
+            String genre;
+            int stock;
+
+            System.out.printf("Welcome to the movie vending-machine.%nAre you a customer(1) or manager(2)?%n");
+            choice = stdIn.nextInt();
+
+            if (choice == 1){
+
+                stdIn.nextLine();
+
+                System.out.printf("Welcome, new customer.%nWhat is your name?%n");
+                name = stdIn.nextLine();
+
+            } else if (choice == 2) {
+
+                stdIn.nextLine();
+
+                System.out.printf("Please input your manager username:%n");
+                name = stdIn.nextLine();
+
+                System.out.printf("Please input the manager password:%n");
+                passwordInput = stdIn.nextInt();
+
+                if (passwordInput == realPassword){
+                    System.out.printf("Welcome %s%n", name);
+
+                    while (action != 0) {
+
+                        System.out.printf("%n--- MANAGER MENU ---%n");
+                        System.out.printf("1) Add movie%n");
+                        System.out.printf("2) Remove movie%n");
+                        System.out.printf("3) Restock movie%n");
+                        System.out.printf("4) View inventory%n");
+                        System.out.printf("5) View rental stats%n");
+                        System.out.printf("0) Exit%n");
+
+                        action = stdIn.nextInt();
+
+                        if (action == 1) {
+
+                            stdIn.nextLine();
+
+                            System.out.printf("What movie would you like to add?%n");
+                            title = stdIn.nextLine();
+                            System.out.printf("What is the genre of the movie?%n");
+                            genre = stdIn.nextLine();
+                            System.out.printf("How much of this movie would you like to add?%n");
+                            stock = stdIn.nextInt();
+
+                            manager.addMovie(new Movie(title, genre, stock));
+                        } else if (action == 4) {
+                            manager.viewInventory();
+                        } else{
+                            System.out.printf("Goodbye.%n");
+                        }
+                    }
+                } else {
+                    System.out.printf("The password is incorrect.%n");
+                }
+
+            } else{
+                System.out.printf("That is not a listed option%n");
+            }
+
+            System.out.printf("Press 0 to quit or any other number to continue.%n");
+            quit = stdIn.nextInt();
+
+        }
+
+    }
+}
