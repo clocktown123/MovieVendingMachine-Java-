@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class MovieVendingMachineDriver {
 
-    static ArrayList<Movie> inventory = new ArrayList<>();
+    //static ArrayList<Movie> inventory = new ArrayList<>();
 
     public static void main(String[] args){
 
@@ -21,12 +21,16 @@ public class MovieVendingMachineDriver {
             String name;
 
             int passwordInput;
-            final int realPassword = 767391;
+            final int realPassword = 232456;
 
             //movie variables
             String title;
             String genre;
+            int year;
             int stock;
+            
+            int sortChoice;
+            int searchChoice;
 
             System.out.printf("Welcome to the movie vending-machine.%nAre you a customer(1) or manager(2)?%n");
             choice = stdIn.nextInt();
@@ -37,6 +41,99 @@ public class MovieVendingMachineDriver {
 
                 System.out.printf("Welcome, new customer.%nWhat is your name?%n");
                 name = stdIn.nextLine();
+                System.out.printf("Hello, %s!%n", name);
+                
+                int customerAction = -1;
+
+                while (customerAction != 0) {
+                    System.out.printf("%n--- CUSTOMER MENU ---%n");
+                    System.out.printf("1) View available movies%n");
+                    System.out.printf("2) Rent a movie%n");
+                    System.out.printf("3) Purchase a movie%n");
+                    System.out.printf("4) Search movies%n");
+                    System.out.printf("5) Sort movies A-Z or Z-A%n");
+                    System.out.printf("0) Exit to main menu%n");
+            
+                    customerAction = stdIn.nextInt();
+            
+                    if (customerAction == 1) {
+                        // View all movies
+                        manager.viewInventory();
+            
+                    } else if (customerAction == 2) {
+                        stdIn.nextLine(); // clear buffer
+                        System.out.printf("Enter the title of the movie you want to rent:%n");
+                        title = stdIn.nextLine();
+                        manager.rentMovie(title);
+            
+                    } else if (customerAction == 3) {
+                        stdIn.nextLine(); // clear buffer
+                        System.out.printf("Enter the title of the movie you want to purchase:%n");
+                        title = stdIn.nextLine();
+                        manager.purchaseMovie(title);
+                    
+                    }else if (customerAction == 4) {
+                        
+                        // Search submenu
+                        stdIn.nextLine(); // clear buffer
+                        System.out.printf("%nSearch by:%n");
+                        System.out.println("1) Title");
+                        System.out.println("2) Actor");
+                        System.out.println("3) Actress");
+                        System.out.println("4) Year");
+                        System.out.println("5) Genre");
+    
+                        searchChoice = stdIn.nextInt();
+    
+                        if (searchChoice == 1 || searchChoice == 2 || searchChoice == 3 || searchChoice == 5) {
+                            stdIn.nextLine(); // prepare for String input
+                            System.out.println("Enter your search term:");
+                            String query = stdIn.nextLine();
+    
+                            if (searchChoice == 1) {
+                                MovieSearchAndSort.searchByTitle(manager.getInventory(), query);
+                            } else if (searchChoice == 2) {
+                                MovieSearchAndSort.searchByActor(manager.getInventory(), query);
+                            } else if (searchChoice == 3) {
+                                MovieSearchAndSort.searchByActress(manager.getInventory(), query);
+                            } else if (searchChoice == 5) {
+                                MovieSearchAndSort.searchByGenre(manager.getInventory(), query);
+                            }
+    
+                        } else if (searchChoice == 4) {
+                            System.out.println("Enter the release year:");
+                            int yearQuery = stdIn.nextInt();
+                            MovieSearchAndSort.searchByYear(manager.getInventory(), yearQuery);
+                        } else {
+                            System.out.println("Not a valid search option.");
+                        }
+
+                    
+                    } else if (customerAction == 5) {
+                        
+                        // Sort submenu
+                        System.out.printf("%nSort movies by title:%n");
+                        System.out.println("1) A–Z");
+                        System.out.println("2) Z–A");
+                        sortChoice = stdIn.nextInt();
+    
+                        if (sortChoice == 1) {
+                            MovieSearchAndSort.sortAZ(manager.getInventory());
+                            manager.viewInventory();
+                        } else if (sortChoice == 2) {
+                            MovieSearchAndSort.sortZA(manager.getInventory());
+                            manager.viewInventory();
+                        } else {
+                            System.out.println("Not a valid sort option.");
+                        }
+                        
+                    } else if (customerAction == 0) {
+                        System.out.println("Returning to main menu...");
+            
+                    } else {
+                        System.out.println("That is not a listed option.");
+                    }
+                }
 
             } else if (choice == 2) {
 
@@ -59,7 +156,8 @@ public class MovieVendingMachineDriver {
                         System.out.printf("3) Restock movie%n");
                         System.out.printf("4) View inventory%n");
                         System.out.printf("5) View rental stats%n");
-                        System.out.printf("0) Exit%n");
+                        System.out.printf("6) Edit movie information%n");
+                        System.out.printf("0) Exit to main menu%n");
 
                         action = stdIn.nextInt();
 
@@ -71,13 +169,126 @@ public class MovieVendingMachineDriver {
                             title = stdIn.nextLine();
                             System.out.printf("What is the genre of the movie?%n");
                             genre = stdIn.nextLine();
+                            System.out.printf("What year was this movie released?%n");
+                            year = stdIn.nextInt();
                             System.out.printf("How much of this movie would you like to add?%n");
                             stock = stdIn.nextInt();
 
-                            manager.addMovie(new Movie(title, genre, stock));
-                        } else if (action == 4) {
+                            manager.addMovie(new Movie(title, genre, stock, year));
+                        } else if (action == 2) {
+                            stdIn.nextLine(); // clear buffer
+                        
+                            System.out.printf("What is the title of the movie you want to remove?%n");
+                            title = stdIn.nextLine();
+                        
+                            System.out.printf("How many copies do you want to remove?%n");
+                            int amount = stdIn.nextInt();
+                        
+                            manager.removeMovie(title, amount);
+                        }else if (action ==3){
+                            stdIn.nextLine(); // clear buffer
+
+                            System.out.printf("What is the title of the movie you want to restock?%n");
+                            title = stdIn.nextLine();
+                        
+                            System.out.printf("How many copies do you want to add?%n");
+                            int amountToAdd = stdIn.nextInt();
+                        
+                            manager.restockMovie(title, amountToAdd);
+                        }else if (action == 4) {
                             manager.viewInventory();
-                        } else{
+                        } else if (action == 5){
+                            
+                            System.out.println("View stats for: ");
+                            System.out.println("1) All movies");
+                            System.out.println("2) A specific movie");
+                            int statsChoice = stdIn.nextInt();
+                        
+                            if (statsChoice == 1) {
+                                manager.viewStats();
+                            } else if (statsChoice == 2) {
+                                stdIn.nextLine(); // clear buffer
+                                System.out.printf("Enter the title of the movie:%n");
+                                String statsTitle = stdIn.nextLine();
+                                manager.viewStatsFor(statsTitle);
+                            } else {
+                                System.out.println("Not a valid option for stats.");
+                            }
+                            
+                        }else if (action == 6){
+                            
+                            stdIn.nextLine(); // clear buffer
+                        
+                            System.out.printf("Enter the title of the movie you want to edit:%n");
+                            String editTitle = stdIn.nextLine();
+                        
+                            Movie movieToEdit = manager.findMovieByTitle(editTitle);
+                        
+                            if (movieToEdit == null) {
+                                System.out.println("Movie not found in inventory.");
+                            } else {
+                                int editChoice = -1;
+                        
+                                while (editChoice != 0) {
+                                    System.out.printf("%n--- EDITING \"%s\" ---%n", movieToEdit.getTitle());
+                                    System.out.println("1) Edit title");
+                                    System.out.println("2) Edit genre");
+                                    System.out.println("3) Edit stock");
+                                    System.out.println("4) Edit main actor");
+                                    System.out.println("5) Edit main actress");
+                                    System.out.println("6) Edit year of release");
+                                    System.out.println("0) Done editing");
+                                    editChoice = stdIn.nextInt();
+                        
+                                    if (editChoice == 1) {
+                                        stdIn.nextLine(); // clear buffer
+                                        System.out.println("Enter new title:");
+                                        String newTitle = stdIn.nextLine();
+                                        movieToEdit.setTitle(newTitle);
+                                        System.out.println("Title updated.");
+                        
+                                    } else if (editChoice == 2) {
+                                        stdIn.nextLine();
+                                        System.out.println("Enter new genre:");
+                                        String newGenre = stdIn.nextLine();
+                                        movieToEdit.setGenre(newGenre);
+                                        System.out.println("Genre updated.");
+                        
+                                    } else if (editChoice == 3) {
+                                        System.out.println("Enter new stock value:");
+                                        int newStock = stdIn.nextInt();
+                                        movieToEdit.setStock(newStock);
+                                        System.out.println("Stock updated.");
+                        
+                                    } else if (editChoice == 4) {
+                                        stdIn.nextLine();
+                                        System.out.println("Enter new main actor:");
+                                        String newActor = stdIn.nextLine();
+                                        movieToEdit.setActor(newActor);
+                                        System.out.println("Main actor updated.");
+                        
+                                    } else if (editChoice == 5) {
+                                        stdIn.nextLine();
+                                        System.out.println("Enter new main actress:");
+                                        String newActress = stdIn.nextLine();
+                                        movieToEdit.setActress(newActress);
+                                        System.out.println("Main actress updated.");
+                        
+                                    } else if (editChoice == 6) {
+                                        System.out.println("Enter new year of release:");
+                                        year = stdIn.nextInt();
+                                        movieToEdit.setYear(year);
+                                        System.out.println("Year of release updated.");
+                        
+                                    } else if (editChoice == 0) {
+                                        System.out.println("Done editing this movie.");
+                                    } else {
+                                        System.out.println("Not a valid edit option.");
+                                    }
+                                }
+                            }
+                            
+                        }else{
                             System.out.printf("Goodbye.%n");
                         }
                     }
@@ -89,7 +300,7 @@ public class MovieVendingMachineDriver {
                 System.out.printf("That is not a listed option%n");
             }
 
-            System.out.printf("Press 0 to quit or any other number to continue.%n");
+            System.out.printf("Welcome to the main menu.%nPress 0 to quit or any other number to continue.%n");
             quit = stdIn.nextInt();
 
         }
