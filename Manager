@@ -3,6 +3,10 @@ import java.util.ArrayList;
 public class MovieManager {
 
     private ArrayList<Movie> inventory;
+    
+    public ArrayList<Movie> getInventory() {
+        return inventory;
+    }
 
     public MovieManager() {
         inventory = new ArrayList<>();
@@ -12,15 +16,196 @@ public class MovieManager {
         inventory.add(movie);
         System.out.printf("%s was added to inventory.", movie.getTitle());
     }
+    
+    public boolean removeMovie(String title, int amount) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory.");
+            return false;
+        }
+    
+        for (Movie movie : inventory) {
+            if (movie.getTitle().equalsIgnoreCase(title)) {
+    
+                int currentStock = movie.getStock();
+    
+                if (amount > currentStock) {
+                    System.out.printf("You tried to remove %d copies, but only %d exist.%n", amount, currentStock);
+                    return false;
+                }
+    
+                movie.setStock(currentStock - amount);
+                System.out.printf("Removed %d copies of %s.%n", amount, movie.getTitle());
+    
+                // if stock hits 0 → delete movie entirely
+                if (movie.getStock() == 0) {
+                    inventory.remove(movie);
+                    System.out.printf("%s has 0 stock and was removed from the inventory completely.%n", movie.getTitle());
+                }
+    
+                return true;
+            }
+        }
+    
+        System.out.printf("Movie titled \"%s\" was not found.%n", title);
+        return false;
+    }
+    
+    public boolean restockMovie(String title, int amount) {
+        if (amount <= 0) {
+            System.out.println("Restock amount must be greater than 0.");
+            return false;
+        }
+    
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory to restock.");
+            return false;
+        }
+    
+        for (Movie movie : inventory) {
+            if (movie.getTitle().equalsIgnoreCase(title)) {
+                int currentStock = movie.getStock();
+                movie.setStock(currentStock + amount);
+                System.out.printf("Restocked %d copies of %s. New stock: %d%n",
+                        amount, movie.getTitle(), movie.getStock());
+                return true;
+            }
+        }
+    
+        System.out.printf("Movie titled \"%s\" was not found in inventory.%n", title);
+        return false;
+    }
+    
 
     public void viewInventory() {
         if (inventory.isEmpty()) {
             System.out.println("No movies in inventory.");
+            return;
+        }
+    
+        System.out.println("\n--- CURRENT INVENTORY ---");
+        for (Movie movie : inventory) {
+            printMovieDetails(movie);
+        }
+    }
+    
+    private void printMovieDetails(Movie movie) {
+        System.out.printf(
+            "Title: %s%n" +
+            "Genre: %s%n" +
+            "Main Actor: %s%n" +
+            "Main Actress: %s%n" +
+            "Year of Release: %d%n" +
+            "Stock: %d%n" +
+            "Rent Price: $%.2f%n" +
+            "Purchase Price: $%.2f%n" +
+            "-----------------------------------%n",
+            movie.getTitle(),
+            movie.getGenre(),
+            (movie.getActor() != null ? movie.getActor() : "N/A"),
+            (movie.getActress() != null ? movie.getActress() : "N/A"),
+            movie.getYear(),
+            movie.getStock(),
+            movie.getRentPrice(),
+            movie.getPurchasePrice()
+        );
+    }
+    
+    public void viewStats() {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory, so no stats to show.");
         } else {
-            for (Movie movie: inventory ){
-                System.out.printf(String.valueOf(inventory));
+            System.out.println("\n--- MOVIE RENTAL & PURCHASE STATS ---");
+            for (Movie movie : inventory) {
+                System.out.printf("Title: %s | Rented: %d times | Purchased: %d times%n",
+                        movie.getTitle(),
+                        movie.getTimesRented(),
+                        movie.getTimesPurchased());
             }
         }
+    }
+    
+    public void viewStatsFor(String title) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory, so no stats to show.");
+            return;
+        }
+    
+        for (Movie movie : inventory) {
+            if (movie.getTitle().equalsIgnoreCase(title)) {
+                System.out.println("\n--- STATS FOR \"" + movie.getTitle() + "\" ---");
+                System.out.printf("Rented: %d times%n", movie.getTimesRented());
+                System.out.printf("Purchased: %d times%n", movie.getTimesPurchased());
+                System.out.printf("Current stock: %d%n", movie.getStock());
+                return;
+            }
+        }
+    
+        System.out.printf("Movie titled \"%s\" was not found in inventory.%n", title);
+    }
+    
+    public boolean rentMovie(String title) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies available to rent.");
+            return false;
+        }
+    
+        for (Movie movie : inventory) {
+            if (movie.getTitle().equalsIgnoreCase(title)) {
+    
+                if (movie.getStock() <= 0) {
+                    System.out.printf("%s is currently out of stock and cannot be rented.%n", movie.getTitle());
+                    return false;
+                }
+    
+                movie.setStock(movie.getStock() - 1);
+                movie.addRental();
+                System.out.printf("You rented \"%s\" for $%.2f. Remaining stock: %d%n",
+                        movie.getTitle(), movie.getRentPrice(), movie.getStock());
+                return true;
+            }
+        }
+    
+        System.out.printf("Movie titled \"%s\" was not found.%n", title);
+        return false;
+    }
+
+    public boolean purchaseMovie(String title) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies available to purchase.");
+            return false;
+        }
+    
+        for (Movie movie : inventory) {
+            if (movie.getTitle().equalsIgnoreCase(title)) {
+    
+                if (movie.getStock() <= 0) {
+                    System.out.printf("%s is currently out of stock and cannot be purchased.%n", movie.getTitle());
+                    return false;
+                }
+    
+                movie.setStock(movie.getStock() - 1);
+                movie.addPurchase();
+                System.out.printf("You purchased \"%s\" for $%.2f. Remaining stock: %d%n",
+                        movie.getTitle(), movie.getPurchasePrice(), movie.getStock());
+                return true;
+            }
+        }
+    
+        System.out.printf("Movie titled \"%s\" was not found.%n", title);
+        return false;
+    }
+    
+    public Movie findMovieByTitle(String title) {
+        if (inventory.isEmpty()) {
+            return null;
+        }
+    
+        for (Movie movie : inventory) {
+            if (movie.getTitle().equalsIgnoreCase(title)) {
+                return movie;
+            }
+        }
+        return null; // not found
     }
 
 }
