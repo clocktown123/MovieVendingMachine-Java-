@@ -1,0 +1,173 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class MovieSearchAndSort {
+
+    // Helper to print a movie's details
+    private static void printMovie(Movie movie) {
+        System.out.printf(
+            "Title: %s%n" +
+            "Genre: %s%n" +
+            "Main Actor: %s%n" +
+            "Main Actress: %s%n" +
+            "Year of Release: %d%n" +
+            "Stock: %d%n" +
+            "Rent Price: $%.2f%n" +
+            "Purchase Price: $%.2f%n" +
+            "-----------------------------------%n",
+            movie.getTitle(),
+            movie.getGenre(),
+            movie.getActor() != null ? movie.getActor() : "N/A",
+            movie.getActress() != null ? movie.getActress() : "N/A",
+            movie.getYear(),
+            movie.getStock(),
+            movie.getRentPrice(),
+            movie.getPurchasePrice()
+        );
+    }
+
+    // ---------- SEARCH FUNCTIONS ----------
+
+    public static void searchByTitle(ArrayList<Movie> inventory, String query) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory.");
+            return;
+        }
+
+        String q = query.toLowerCase();
+        boolean found = false;
+
+        System.out.printf("%n--- SEARCH RESULTS: Title contains \"%s\" ---\n", query);
+        for (Movie movie : inventory) {
+            if (movie.getTitle() != null &&
+                movie.getTitle().toLowerCase().contains(q)) {
+                printMovie(movie);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No movies matched your search.");
+        }
+    }
+
+    public static void searchByActor(ArrayList<Movie> inventory, String query) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory.");
+            return;
+        }
+
+        String q = query.toLowerCase();
+        boolean found = false;
+
+        System.out.printf("%n--- SEARCH RESULTS: Actor contains \"%s\" ---\n", query);
+        for (Movie movie : inventory) {
+            if (movie.getActor() != null &&
+                movie.getActor().toLowerCase().contains(q)) {
+                printMovie(movie);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No movies matched your search.");
+        }
+    }
+
+    public static void searchByActress(ArrayList<Movie> inventory, String query) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory.");
+            return;
+        }
+
+        String q = query.toLowerCase();
+        boolean found = false;
+
+        System.out.printf("%n--- SEARCH RESULTS: Actress contains \"%s\" ---\n", query);
+        for (Movie movie : inventory) {
+            if (movie.getActress() != null &&
+                movie.getActress().toLowerCase().contains(q)) {
+                printMovie(movie);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No movies matched your search.");
+        }
+    }
+
+    public static void searchByGenre(ArrayList<Movie> inventory, String query) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory.");
+            return;
+        }
+
+        String q = query.toLowerCase();
+        boolean found = false;
+
+        System.out.printf("%n--- SEARCH RESULTS: Genre contains \"%s\" ---\n", query);
+        for (Movie movie : inventory) {
+            if (movie.getGenre() != null &&
+                movie.getGenre().toLowerCase().contains(q)) {
+                printMovie(movie);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No movies matched your search.");
+        }
+    }
+
+    public static void searchByYear(ArrayList<Movie> inventory, int year) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory.");
+            return;
+        }
+
+        boolean found = false;
+
+        System.out.printf("%n--- SEARCH RESULTS: Year = %d ---\n", year);
+        for (Movie movie : inventory) {
+            if (movie.getYear() == year) {
+                printMovie(movie);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No movies matched your search.");
+        }
+    }
+
+    // ---------- SORT FUNCTIONS ----------
+
+    public static void sortAZ(ArrayList<Movie> inventory) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory to sort.");
+            return;
+        }
+
+        inventory.sort(Comparator.comparing(
+            Movie::getTitle,
+            String.CASE_INSENSITIVE_ORDER
+        ));
+        System.out.println("Movies sorted A–Z by title.");
+    }
+
+    public static void sortZA(ArrayList<Movie> inventory) {
+        if (inventory.isEmpty()) {
+            System.out.println("No movies in inventory to sort.");
+            return;
+        }
+
+        inventory.sort(
+            Comparator.comparing(
+                Movie::getTitle,
+                String.CASE_INSENSITIVE_ORDER
+            ).reversed()
+        );
+        System.out.println("Movies sorted Z–A by title.");
+    }
+}
