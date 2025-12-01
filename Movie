@@ -7,18 +7,20 @@ public class Movie {
     private int stock;
     private final double purchasePrice = 30.00;
     private final double rentPrice = 21.00;
+    private int timesRented = 0;
+    private int timesPurchased = 0;
 
-    public Movie(String title,String genre ,int stock ){
+    public Movie(String title,String genre ,int stock, int yearOfRelease ){
         this.movieTitle = title;
         this.genre = genre;
         this.stock = stock;
+        this.yearOfRelease = yearOfRelease;
 
     }
 
-    public Movie(int yearOfRelease, String mainActor, String mainActress){
+    public Movie(String mainActor, String mainActress){
         this.mainActor = mainActor;
         this.mainActress = mainActress;
-        this.yearOfRelease = yearOfRelease;
 
     }
 
@@ -70,6 +72,19 @@ public class Movie {
     public void setStock(int stock) {
         this.stock = stock;
     }
+    
+    public void addRental() {
+        timesRented++;
+    }
+    public void addPurchase() {
+        timesPurchased++;
+    }
+
+    public int getTimesRented() {
+        return timesRented;
+    }
+    public int getTimesPurchased() {
+        return timesPurchased;
+    }
 
 }
-
