@@ -12,6 +12,14 @@ public class MovieManager {
         inventory = new ArrayList<>();
     }
 
+    public void loadDefaultMovies() {
+        inventory.add(new Movie("Shrek", "Comedy", 5, 2001));
+        inventory.add(new Movie("Toy Story", "Animation", 4, 1995));
+        inventory.add(new Movie("Frozen", "Animation", 8, 2013));
+        inventory.add(new Movie("Joker", "Drama", 5, 2019));
+        inventory.add(new Movie("Oppenheimer", "Historical", 3, 2023));
+    }
+
     public void addMovie(Movie movie) {
         inventory.add(movie);
         System.out.printf("%s was added to inventory.", movie.getTitle());
