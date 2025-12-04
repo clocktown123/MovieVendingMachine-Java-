@@ -10,6 +10,8 @@ public class MovieVendingMachineDriver {
         Scanner stdIn = new Scanner(System.in);
         MovieManager manager = new MovieManager();
 
+        manager.loadDefaultMovies();
+
         int quit = -1;
 
         while(quit != 0){
@@ -31,6 +33,8 @@ public class MovieVendingMachineDriver {
             
             int sortChoice;
             int searchChoice;
+
+
 
             System.out.printf("Welcome to the movie vending-machine.%nAre you a customer(1) or manager(2)?%n");
             choice = stdIn.nextInt();
